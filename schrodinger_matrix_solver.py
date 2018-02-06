@@ -26,7 +26,7 @@ def eigensolver(matrix):
 
     return eigenvalues, eigenvectors
 
-if __name__ = "__main__"
+if __name__ == "__main__":
     print(eigensolver(random_matrix(3))[0])
     print('')
     print(eigensolver(random_matrix(3))[1])

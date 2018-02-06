@@ -12,11 +12,24 @@
 """
 import schrodinger_to_matrix as stm
 import numpy as np
+import schrodinger_matrix_solver as sms
+import matplotlib.pyplot as plt
 
-test_case = stm.Schrod_Matrix([0,100],10,stm.V)
+test_case = stm.Schrod_Matrix([-100,100],100,stm.V)
 
 x_val = test_case.x_set()
 matrix = test_case.gen_matrix(x_val)
 matrix = .5*matrix
 
-print(matrix)
+eigenva,eigenve = sms.eigensolver(matrix)
+
+#print(matrix)
+#print(eigenva)
+#print(eigenve)
+
+#plt.plot(x_val,stm.V(np.array(x_val)))
+
+for i in range(len(eigenva)):
+    plt.plot(x_val,eigenve[i])
+    
+plt.show()

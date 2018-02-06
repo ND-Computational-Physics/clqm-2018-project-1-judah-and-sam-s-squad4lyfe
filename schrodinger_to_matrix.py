@@ -46,6 +46,8 @@ class Schrod_Matrix:
             i (index): Row index
 
             j (index): Column index
+            
+            x_points (list): A set of the x points we're evaluating over
         """
         h = 1
 
@@ -65,7 +67,7 @@ class Schrod_Matrix:
         step = (self.endpoints[1] - self.endpoints[0])/self.num_steps
 
         for i in range(1,self.num_steps):
-            x.append(self.endpoints[1] + i*step)
+            x.append(self.endpoints[0] + i*step)
 
         return x
 
