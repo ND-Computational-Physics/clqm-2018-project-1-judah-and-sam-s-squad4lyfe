@@ -12,6 +12,12 @@ import numpy as np
 np.set_printoptions(precision=3)
 
 def random_matrix(n):
+    """
+    Test function to create an (n x n) matrix with random entries.
+
+    Arguments:
+            n(int): Dimension of square array
+"""
 
     matrix = np.zeros((n,n))
     for i in range(n):
@@ -20,6 +26,13 @@ def random_matrix(n):
     return matrix
 
 def eigensolver(matrix):
+    """
+    Given a matrix, this function will solve for the eigenvalues and
+    eigenfunctions, returning both of these as separate arrays.
+
+    Arguments:
+            matrix(array): List of lists representing a matrix
+"""
 
     eigenvalues = np.linalg.eig(matrix)[0]
     eigenvectors = np.linalg.eig(matrix)[1]
