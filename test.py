@@ -16,7 +16,6 @@ import schrodinger_matrix_solver as sms
 import matplotlib.pyplot as plt
 
 
-test_case = stm.Schrod_Matrix([-1,1],4,stm.V)
 
 x_val = test_case.x_set()
 matrix = test_case.gen_matrix(x_val)
