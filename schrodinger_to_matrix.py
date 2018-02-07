@@ -49,7 +49,7 @@ class Schrod_Matrix:
             
             x_points (list): A set of the x points we're evaluating over
         """
-        h = 1
+        h = (self.endpoints[1] - self.endpoints[0])/self.num_steps
 
         if i == j:
             element = (2/h**2) + self.potential(x_points[i])

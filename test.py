@@ -15,7 +15,7 @@ import numpy as np
 import schrodinger_matrix_solver as sms
 import matplotlib.pyplot as plt
 
-test_case = stm.Schrod_Matrix([-100,100],100,stm.V)
+test_case = stm.Schrod_Matrix([-1,1],4,stm.V)
 
 x_val = test_case.x_set()
 matrix = test_case.gen_matrix(x_val)
@@ -23,11 +23,11 @@ matrix = .5*matrix
 
 eigenva,eigenve = sms.eigensolver(matrix)
 
-#print(matrix)
-#print(eigenva)
+print(matrix)
+print(eigenva)
 #print(eigenve)
 
-#plt.plot(x_val,stm.V(np.array(x_val)))
+plt.plot(x_val,stm.V(np.array(x_val)))
 
 for i in range(len(eigenva)):
     plt.plot(x_val,eigenve[i])
