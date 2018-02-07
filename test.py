@@ -15,7 +15,11 @@ import numpy as np
 import schrodinger_matrix_solver as sms
 import matplotlib.pyplot as plt
 
+<<<<<<< Updated upstream
 test_case = stm.Schrod_Matrix([-1,1],4,stm.V)
+=======
+test_case = stm.Schrod_Matrix([-5,5],5,stm.V)
+>>>>>>> Stashed changes
 
 x_val = test_case.x_set()
 matrix = test_case.gen_matrix(x_val)
@@ -25,11 +29,15 @@ eigenva,eigenve = sms.eigensolver(matrix)
 
 print(matrix)
 print(eigenva)
+<<<<<<< Updated upstream
 #print(eigenve)
+=======
+print(eigenve)
+>>>>>>> Stashed changes
 
 plt.plot(x_val,stm.V(np.array(x_val)))
 
 for i in range(len(eigenva)):
     plt.plot(x_val,eigenve[i])
-    
-plt.show()
+
+#plt.show()

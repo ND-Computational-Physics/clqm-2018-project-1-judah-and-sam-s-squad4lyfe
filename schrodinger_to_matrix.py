@@ -46,13 +46,17 @@ class Schrod_Matrix:
             i (index): Row index
 
             j (index): Column index
-            
+
             x_points (list): A set of the x points we're evaluating over
         """
+<<<<<<< Updated upstream
         h = (self.endpoints[1] - self.endpoints[0])/self.num_steps
+=======
+        h = (self.endpoints[1]-self.endpoints[0])/self.num_steps
+>>>>>>> Stashed changes
 
         if i == j:
-            element = (2/h**2) + self.potential(x_points[i])
+            element = (2/h**2) + self.potential(x_points[i+1])
         elif i >= j+2:
             element = 0
         elif j >= i+2:
