@@ -25,6 +25,16 @@ eigenva,eigenve = sms.eigensolver(matrix)
 eigenve = np.transpose(eigenve)
 
 #plt.plot(x_val,stm.V(np.array(x_val)))
+x=[]
+y=[]
+print(len(eigenve))
+print(len(x_val))
+for i in range(len(eigenve)):
+    x.append(x_val[i])
+    y.append(eigenve[0][i])
+print(x)
+print(y)
+plt.plot(x,y)
 
 for i in range():
     eigenve1 = np.array(eigenve[i])**2
