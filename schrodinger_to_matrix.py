@@ -8,7 +8,7 @@
     University of Notre Dame
 
     Written for Computational Lab in Quantum Mechanics, Spring 2018
-    Last updated on 2/1/2018
+    Last updated on 2/8/2018
 """
 import numpy as np
 
@@ -64,6 +64,12 @@ class Schrod_Matrix:
         return element
 
     def x_set(self):
+        """
+        Defining our set of x values which we want to evaluate over.
+        
+        Outputs:
+            x (list): A list of our x values
+        """
         x = []
         step = (self.endpoints[1] - self.endpoints[0])/self.num_steps
 
@@ -73,6 +79,15 @@ class Schrod_Matrix:
         return x
 
     def gen_matrix(self,x):
+        """
+        Creating our Hamiltonian matrix
+        
+        Inputs:
+            x (list): A list of our x values we'll evaluate over
+        
+        Outputs:
+            hamilt (array): Our hamiltonian matrix
+        """
         hamilt = np.zeros([self.num_steps-1,self.num_steps-1])
 
         for i in range(self.num_steps-1):
