@@ -34,8 +34,8 @@ def eigensolver(matrix):
             matrix(array): List of lists representing a matrix
 """
 
-    eigenvalues = np.linalg.eig(matrix)[0]
-    eigenvectors = np.linalg.eig(matrix)[1]
+    eigenvalues = np.linalg.eigh(matrix)[0]
+    eigenvectors = np.linalg.eigh(matrix)[1]
 
     return eigenvalues, eigenvectors
 

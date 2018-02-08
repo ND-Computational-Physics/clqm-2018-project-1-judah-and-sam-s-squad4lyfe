@@ -52,7 +52,6 @@ class Schrod_Matrix:
 
         h = (self.endpoints[1] - self.endpoints[0])/self.num_steps
 
-
         if i == j:
             element = (2/h**2) + self.potential(x_points[i])
         elif i >= j+2:
@@ -70,7 +69,7 @@ class Schrod_Matrix:
 
         for i in range(1,self.num_steps):
             x.append(self.endpoints[0] + i*step)
-
+        
         return x
 
     def gen_matrix(self,x):

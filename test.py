@@ -15,22 +15,21 @@ import numpy as np
 import schrodinger_matrix_solver as sms
 import matplotlib.pyplot as plt
 
-
-
+test_case = stm.Schrod_Matrix([-5,5],200, stm.V)
 x_val = test_case.x_set()
 matrix = test_case.gen_matrix(x_val)
 matrix = .5*matrix
 
 eigenva,eigenve = sms.eigensolver(matrix)
 
-print(matrix)
-print(eigenva)
-print(eigenve)
-
+eigenve = np.transpose(eigenve)
 
 #plt.plot(x_val,stm.V(np.array(x_val)))
 
-for i in range(len(eigenva)):
-    plt.plot(x_val,eigenve[i])
+for i in range():
+    eigenve1 = np.array(eigenve[i])**2
+    norm_factor = np.trapz(eigenve1,x_val)
+    eigenve_plot = np.array(eigenve[i])*np.sqrt(1/norm_factor)
+    plt.plot(x_val,eigenve_plot)
 
 plt.show()
