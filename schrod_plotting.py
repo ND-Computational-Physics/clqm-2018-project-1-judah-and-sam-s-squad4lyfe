@@ -14,6 +14,7 @@ import schrodinger_to_matrix as stm
 import numpy as np
 import schrodinger_matrix_solver as sms
 import matplotlib.pyplot as plt
+import scipy
 
 def schrod_plot(endpoints, num_points, potential, range_var1, range_var2): 
     """
@@ -38,13 +39,13 @@ def schrod_plot(endpoints, num_points, potential, range_var1, range_var2):
     eigenva,eigenve = sms.eigensolver(matrix)
 
     eigenve = np.transpose(eigenve) # Transposing the eigenvectors so we can plot them against our x_val
-
+    
+    h = (test_case.endpoints[1] - test_case.endpoints[0])/test_case.num_steps
+    
     for i in range(range_var1,range_var2):
-        eigenve1 = np.array(eigenve[i])**2 # Normalizing our eigenvectors
-        norm_factor = np.trapz(eigenve1,x_val)
-        eigenve_plot = np.array(eigenve[i])*np.sqrt(1/norm_factor)
+        eigenve_plot = np.array(eigenve[i])*np.sqrt(1/h)
         plt.plot(x_val,eigenve_plot)
 
     plt.show()
 
-schrod_plot([-5,5],201,stm.V, 14,15)
+schrod_plot([-5,5],1050,stm.V, 0,2)
