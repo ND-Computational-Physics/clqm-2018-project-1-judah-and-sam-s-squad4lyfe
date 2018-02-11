@@ -16,7 +16,7 @@ import schrodinger_matrix_solver as sms
 import matplotlib.pyplot as plt
 import scipy
 
-def schrod_plot(endpoints, num_points, potential, range_var1, range_var2): 
+def schrod_plot(endpoints, num_points, potential, range_var1, range_var2, m): 
     """
     Plotting and normalizing our solutions to the Schrodinger Equation.
     
@@ -26,15 +26,14 @@ def schrod_plot(endpoints, num_points, potential, range_var1, range_var2):
         potental (func): The potential we want to consider when evaluating
         range_var1 (int): The lower bound of the eigenvector solutions we want to plot
         range_var2 (int): The upper bound of the eigenvector solutions we want to plot
+        m (float): The mass of our particle
     
     Outputs:
         (plot): A plot of the normalized eigenvectors you're interested in plotting
     """
-    test_case = stm.Schrod_Matrix(endpoints,num_points-1, potential)
+    test_case = stm.Schrod_Matrix(endpoints,num_points-1, potential, m)
     x_val = test_case.x_set()
     matrix = test_case.gen_matrix(x_val)
-    
-    matrix = .5*matrix # Our matrix is scaled by a factor of 2 too large based on the derivation of this method
 
     eigenva,eigenve = sms.eigensolver(matrix)
 
@@ -45,7 +44,9 @@ def schrod_plot(endpoints, num_points, potential, range_var1, range_var2):
     for i in range(range_var1,range_var2):
         eigenve_plot = np.array(eigenve[i])*np.sqrt(1/h)
         plt.plot(x_val,eigenve_plot)
-
+    
+    plt.xlabel("(m)")
+    plt.ylabel("(keV)")
     plt.show()
 
-schrod_plot([-5,5],1050,stm.V, 0,2)
+schrod_plot([-5,5],1050,stm.V, 0,11, 511)
