@@ -25,7 +25,7 @@ def V(x):
 
 
 class Schrod_Matrix:
-    def __init__(self, endpoints, num_steps, potential):
+    def __init__(self, endpoints, num_steps, potential, m):
         """
         Arguments:
             endpoints (list): The two endpoints of our range over which we're solving the Schrodinger Equation.
@@ -33,10 +33,13 @@ class Schrod_Matrix:
             num_steps (int): The number of steps we're solving the Schrodinger Equation at, essentially the size of our hamiltonian matrix.
 
             potential (function): Our potential, resulting from V(x).
+            
+            m (float): The mass of our particle
         """
         self.endpoints = endpoints
         self.num_steps = num_steps
         self.potential = potential
+        self.m = m
 
     def matrix_element_generate(self, i, j, x_points):
         """
@@ -51,15 +54,15 @@ class Schrod_Matrix:
         """
 
         h = (self.endpoints[1] - self.endpoints[0])/self.num_steps
-
+        
         if i == j:
-            element = (2/h**2) + self.potential(x_points[i])
+            element = (1/(2*self.m))*(2/h**2) + self.potential(x_points[i])
         elif i >= j+2:
             element = 0
         elif j >= i+2:
             element = 0
         else:
-            element = -1/(h**2)
+            element = (1/(2*self.m))*(-1/(h**2))
 
         return element
 
