@@ -11,7 +11,8 @@
     Last updated on 2/8/2018
 """
 import numpy as np
-import schrod_plotting as sp
+import hermite
+import math
 
 def V(x):
     """
@@ -78,21 +79,21 @@ class Schrod_Matrix:
         j (index): Column index
 
         x_points (list): A set of the x points we're evaluating over
-    """
-    h_bar = 1
+        """
+        h_bar = 1
 
-    prefactor = (-1*h_bar*w)/4
-
-    if i+2 == j:
-        element = prefactor*math.sqrt(i+1)*math.sqrt(i+2)
-    elif i == j:
-        element = (-1)*prefactor*((i+1)+(i))
-    elif i-2 == j:
-        element = prefactor*math.sqrt(i)*math.sqrt(i-1)
-## Each of these elements is missing the expectation value of the potential at the end.
-## We need a function to calculate this, which will be added later.         
-    return element
-
+        prefactor = (-1*h_bar*w)/4
+        
+        if i+2 == j:
+            element = prefactor*math.sqrt(i+1)*math.sqrt(i+2) + self.ho_integral(x_points, i, j, self.potential, self.m)
+        elif i == j:
+            element = (-1)*prefactor*((i+1)+(i)) + self.ho_integral(x_points, i, j, self.potential, self.m)
+        elif i-2 == j:
+            element = prefactor*math.sqrt(i)*math.sqrt(i-1) + self.ho_integral(x_points, i, j, self.potential, self.m)
+        else:
+            element = 0
+        
+        return element
 
     def x_set(self):
         """
@@ -109,7 +110,7 @@ class Schrod_Matrix:
 
         return x
 
-    def gen_matrix(self,x):
+    def gen_matrix_discrete(self, x):
         """
         Creating our Hamiltonian matrix
 
@@ -123,12 +124,31 @@ class Schrod_Matrix:
 
         for i in range(self.num_steps-1):
             for j in range(self.num_steps-1):
-                ele = self.matrix_element_generate(i,j,x)
+                ele = self.matrix_element_generate_discrete(i,j,x)
                 hamilt[i][j] = ele
 
         return hamilt
     
-    def ho_integral(x_set, i, j, potential, m):
+    def gen_matrix_ho(self, x, omega):
+        """
+        Creating our Hamiltonian matrix
+
+        Inputs:
+            x (list): A list of our x values we'll evaluate over
+
+        Outputs:
+            hamilt (array): Our hamiltonian matrix
+        """
+        hamilt = np.zeros([self.num_steps-1,self.num_steps-1])
+
+        for i in range(self.num_steps-1):
+            for j in range(self.num_steps-1):
+                ele = self.matrix_element_generate_ho(i,j,x, omega)
+                hamilt[i][j] = ele
+
+        return hamilt
+    
+    def ho_integral(self, x_set, i, j, potential, m):
         omega = 1
         V = []
         wavefunc_conj = []
@@ -136,10 +156,26 @@ class Schrod_Matrix:
         
         for x in x_set:
             V.append(potential(x))
-            wavefunc_conj.append(sp.ho_soln(x, i, omega, m))
-            wavefunc.append(sp.ho_soln(x, j, omega, m))
+            wavefunc_conj.append(self.ho_soln(x, i, omega, m))
+            wavefunc.append(self.ho_soln(x, j, omega, m))
         
         solution = np.array(wavefunc_conj)*np.array(V)*np.array(wavefunc)
         
         return np.trapz(solution, x_set)
             
+    def ho_soln(self, x, n, omega, m):
+        """
+        The solutions to the harmonic oscillator basis, which we'll mulitply by our eigenvectors to the Hamiltonian.
+    
+        Inputs:
+            x (float): x value we're evaluating at
+            n (int): The integer quantum number n
+            omega (float): Constant of proprtionality
+            m (float): The mass of our particle
+        Outputs:
+            soln (float): Our solution to part of the HO basis
+        """
+        x = np.sqrt(m*omega)*x
+        herm = hermite.hermite(n, x)
+        soln = ((m*omega/np.pi)**(1/4))*(math.sqrt((2**n)*math.factorial(n)))**(-1)*herm*np.exp(-.5*x**2)
+        return soln
