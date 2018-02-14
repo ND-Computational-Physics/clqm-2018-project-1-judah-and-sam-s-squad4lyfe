@@ -68,7 +68,7 @@ class Schrod_Matrix:
 
         return element
 
-    def matrix_element_generate_ho(self, i, j, x_points):
+    def matrix_element_generate_ho(self, i, j, x_points, w):
         """
     Generating the elements of our hamiltonian matrix for a discrete basis.
 
@@ -79,7 +79,19 @@ class Schrod_Matrix:
 
         x_points (list): A set of the x points we're evaluating over
     """
-    h = (self.endpoints[1] - self.endpoints[0])/self.num_steps
+    h_bar = 1
+
+    prefactor = (-1*h_bar*w)/4
+
+    if i+2 == j:
+        element = prefactor*math.sqrt(i+1)*math.sqrt(i+2)
+    elif i == j:
+        element = (-1)*prefactor*((i+1)+(i))
+    elif i-2 == j:
+        element = prefactor*math.sqrt(i)*math.sqrt(i-1)
+## Each of these elements is missing the expectation value of the potential at the end.
+## We need a function to calculate this, which will be added later.         
+    return element
 
 
     def x_set(self):
