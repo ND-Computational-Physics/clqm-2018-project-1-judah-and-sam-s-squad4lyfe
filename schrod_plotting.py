@@ -15,8 +15,9 @@ import numpy as np
 import schrodinger_matrix_solver as sms
 import matplotlib.pyplot as plt
 import scipy
+import hermite
 
-def schrod_plot(endpoints, num_points, potential, range_var1, range_var2, m): 
+def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var2, m): 
     """
     Plotting and normalizing our solutions to the Schrodinger Equation.
     
@@ -45,8 +46,48 @@ def schrod_plot(endpoints, num_points, potential, range_var1, range_var2, m):
         eigenve_plot = np.array(eigenve[i])*np.sqrt(1/h)
         plt.plot(x_val,eigenve_plot)
     
-    plt.xlabel("(m)")
+    plt.xlabel("(pm)")
     plt.ylabel("(keV)")
     plt.show()
 
-schrod_plot([-5,5],1050,stm.V, 0,11, 511)
+    return eigenva
+
+def ho_soln(x, n, omega, m):
+    """
+    The solutions to the harmonic oscillator basis, which we'll mulitply by our eigenvectors to the Hamiltonian.
+    
+    Inputs:
+        x (float): x value we're evaluating at
+        n (int): The integer quantum number n
+        omega (float): Constant of proprtionality
+        m (float): The mass of our particle
+    Outputs:
+        soln (float): Our solution to part of the HO basis
+    """
+    x = np.sqrt(m*omega)*x
+    herm = hermite.hermite(n, x)
+    soln = ((m*omega/np.pi)**(1/4))(1/np.sqrt((2**n)*np.factorial(n)))*herm*np.exp(-.5*x**2)
+    
+    return soln
+
+def schrod_plot_ho(endpoints, num_points, potential, range_var1, range_var2, m):
+    
+    eigenva,eigenve = sms.eigensolver(matrix)
+
+    eigenve = np.transpose(eigenve)
+    
+    omega = 1
+    ###INSERT STUFF TO SOLVE MATRIX##
+    ho = []
+    for i in range(range_var1, range_var2):
+        for x in x_val:
+            ho.append(ho_soln(x, i, omega, m))
+        eigenve_plot = np.array(ho)*np.array(eigenve[i])
+        plt.plot(x_val,eigenve_plot)
+    
+    plt.xlabel("(pm)")
+    plt.ylabel("(keV)")
+    plt.show()
+
+x = schrod_plot_discrete([-2,2],1000,stm.V, 0,3, 511)
+print(x)

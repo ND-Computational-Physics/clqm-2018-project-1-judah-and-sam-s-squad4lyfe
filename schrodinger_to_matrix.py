@@ -52,11 +52,12 @@ class Schrod_Matrix:
 
             x_points (list): A set of the x points we're evaluating over
         """
-
+        hbar = 1
+        
         h = (self.endpoints[1] - self.endpoints[0])/self.num_steps
         
         if i == j:
-            element = (1/(2*self.m))*(2/h**2) + self.potential(x_points[i])
+            element = ((hbar**2)/(2*self.m))*(2/h**2) + self.potential(x_points[i])
         elif i >= j+2:
             element = 0
         elif j >= i+2:
