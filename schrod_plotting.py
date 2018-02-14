@@ -48,8 +48,8 @@ def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var
     
     plt.xlabel("(pm)")
     plt.ylabel("(keV)")
+    
     plt.show()
-
     return eigenva
 
 def ho_soln(x, n, omega, m):
@@ -76,8 +76,8 @@ def schrod_plot_ho(endpoints, num_points, potential, range_var1, range_var2, m):
 
     eigenve = np.transpose(eigenve)
     
-    omega = 1
-    ###INSERT STUFF TO SOLVE MATRIX##
+    omega = 1 
+    
     ho = []
     for i in range(range_var1, range_var2):
         for x in x_val:

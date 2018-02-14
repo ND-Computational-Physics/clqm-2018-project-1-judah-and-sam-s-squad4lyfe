@@ -11,6 +11,7 @@
     Last updated on 2/8/2018
 """
 import numpy as np
+import schrod_plotting as sp
 
 def V(x):
     """
@@ -100,3 +101,19 @@ class Schrod_Matrix:
                 hamilt[i][j] = ele
 
         return hamilt
+    
+    def ho_integral(x_set, i, j, potential, m):
+        omega = 1
+        V = []
+        wavefunc_conj = []
+        wavefunc = []
+        
+        for x in x_set:
+            V.append(potential(x))
+            wavefunc_conj.append(sp.ho_soln(x, i, omega, m))
+            wavefunc.append(sp.ho_soln(x, j, omega, m))
+        
+        solution = np.array(wavefunc_conj)*np.array(V)*np.array(wavefunc)
+        
+        return np.trapz(solution, x_set)
+            
