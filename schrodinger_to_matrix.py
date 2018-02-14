@@ -33,7 +33,7 @@ class Schrod_Matrix:
             num_steps (int): The number of steps we're solving the Schrodinger Equation at, essentially the size of our hamiltonian matrix.
 
             potential (function): Our potential, resulting from V(x).
-            
+
             m (float): The mass of our particle
         """
         self.endpoints = endpoints
@@ -41,9 +41,9 @@ class Schrod_Matrix:
         self.potential = potential
         self.m = m
 
-    def matrix_element_generate(self, i, j, x_points):
+    def matrix_element_generate_discrete(self, i, j, x_points):
         """
-        Generating the elements of our hamiltonian matrix.
+        Generating the elements of our hamiltonian matrix for a discrete basis.
 
         Arguments:
             i (index): Row index
@@ -53,9 +53,9 @@ class Schrod_Matrix:
             x_points (list): A set of the x points we're evaluating over
         """
         hbar = 1
-        
+
         h = (self.endpoints[1] - self.endpoints[0])/self.num_steps
-        
+
         if i == j:
             element = ((hbar**2)/(2*self.m))*(2/h**2) + self.potential(x_points[i])
         elif i >= j+2:
@@ -67,10 +67,24 @@ class Schrod_Matrix:
 
         return element
 
+    def matrix_element_generate_ho(self, i, j, x_points):
+        """
+    Generating the elements of our hamiltonian matrix for a discrete basis.
+
+    Arguments:
+        i (index): Row index
+
+        j (index): Column index
+
+        x_points (list): A set of the x points we're evaluating over
+    """
+    h = (self.endpoints[1] - self.endpoints[0])/self.num_steps
+
+
     def x_set(self):
         """
         Defining our set of x values which we want to evaluate over.
-        
+
         Outputs:
             x (list): A list of our x values
         """
@@ -79,16 +93,16 @@ class Schrod_Matrix:
 
         for i in range(1,self.num_steps):
             x.append(self.endpoints[0] + i*step)
-        
+
         return x
 
     def gen_matrix(self,x):
         """
         Creating our Hamiltonian matrix
-        
+
         Inputs:
             x (list): A list of our x values we'll evaluate over
-        
+
         Outputs:
             hamilt (array): Our hamiltonian matrix
         """
