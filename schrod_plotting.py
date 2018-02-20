@@ -8,7 +8,7 @@
     University of Notre Dame
 
     Written for Computational Lab in Quantum Mechanics, Spring 2018
-    Last updated on 2/8/2018
+    Last updated on 2/15/2018
 """
 import schrodinger_to_matrix as stm
 import numpy as np
@@ -50,13 +50,14 @@ def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var
     plt.ylabel("(keV)")
     
     plt.show()
+    
     return eigenva
 
-def schrod_plot_ho(endpoints, num_points, potential, range_var1, range_var2, m):
+def schrod_plot_ho(endpoints, num_points, dimension, potential, range_var1, range_var2, m):
     
     omega = 1 
     
-    test_case = stm.Schrod_Matrix(endpoints, num_points-1, potential, m)
+    test_case = stm.Schrod_Matrix(endpoints, num_points-1, dimension, potential, m)
     x_val = test_case.x_set()
     matrix = test_case.gen_matrix_ho(x_val,omega)
     
@@ -64,21 +65,30 @@ def schrod_plot_ho(endpoints, num_points, potential, range_var1, range_var2, m):
 
     eigenve = np.transpose(eigenve)
     
+    ho_total = []
     
-    for i in range(range_var1, range_var2):
+    for i in range(0, dimension):
         ho = []
         for x in x_val:
             ho.append(test_case.ho_soln(x, i, omega, m))
-        #print(ho)
-        eigenve_plot = np.array(ho)*np.array(eigenve[i])
-        plt.plot(x_val,eigenve_plot)
+        
+        ho_total.append(ho)
+
+    solns = np.matmul(np.transpose(np.array(ho_total)),np.array(eigenve))
     
+    solns = np.transpose(solns)
+    
+    for i in range(range_var1, range_var2):
+        plt.plot(x_val, solns[i])
+
     plt.xlabel("(pm)")
     plt.ylabel("(keV)")
     plt.show()
+    
+    return eigenva
 
-#x = schrod_plot_discrete([-2,2],1000,stm.V, 0,3, 511)
+#x = schrod_plot_discrete([-200,200],150,stm.V, 0,2, 511)
 #print(x)
 
-x = schrod_plot_ho([-2,2],110,stm.V,0,3, 511)
+x = schrod_plot_ho([-1,1],1000,10,stm.V,0,4,511)
 print(x)

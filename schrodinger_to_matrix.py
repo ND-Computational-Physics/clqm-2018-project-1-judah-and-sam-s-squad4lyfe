@@ -8,11 +8,12 @@
     University of Notre Dame
 
     Written for Computational Lab in Quantum Mechanics, Spring 2018
-    Last updated on 2/8/2018
+    Last updated on 2/15/2018
 """
 import numpy as np
 import hermite
 import math
+import scipy.integrate
 
 def V(x):
     """
@@ -27,7 +28,7 @@ def V(x):
 
 
 class Schrod_Matrix:
-    def __init__(self, endpoints, num_steps, potential, m):
+    def __init__(self, endpoints, num_steps, dimension, potential, m):
         """
         Arguments:
             endpoints (list): The two endpoints of our range over which we're solving the Schrodinger Equation.
@@ -40,6 +41,7 @@ class Schrod_Matrix:
         """
         self.endpoints = endpoints
         self.num_steps = num_steps
+        self.dimension = dimension
         self.potential = potential
         self.m = m
 
@@ -139,10 +141,10 @@ class Schrod_Matrix:
         Outputs:
             hamilt (array): Our hamiltonian matrix
         """
-        hamilt = np.zeros([self.num_steps-1,self.num_steps-1])
+        hamilt = np.zeros([self.dimension,self.dimension])
 
-        for i in range(self.num_steps-1):
-            for j in range(self.num_steps-1):
+        for i in range(self.dimension):
+            for j in range(self.dimension):
                 ele = self.matrix_element_generate_ho(i,j,x, omega)
                 hamilt[i][j] = ele
 
@@ -158,10 +160,12 @@ class Schrod_Matrix:
             V.append(potential(x))
             wavefunc_conj.append(self.ho_soln(x, i, omega, m))
             wavefunc.append(self.ho_soln(x, j, omega, m))
-        
+    
         solution = np.array(wavefunc_conj)*np.array(V)*np.array(wavefunc)
         
-        return np.trapz(solution, x_set)
+        returnee = scipy.integrate.simps(solution, x_set)
+        
+        return returnee
             
     def ho_soln(self, x, n, omega, m):
         """
@@ -175,7 +179,9 @@ class Schrod_Matrix:
         Outputs:
             soln (float): Our solution to part of the HO basis
         """
-        x = np.sqrt(m*omega)*x
+        h_bar = 1
+        x = np.sqrt(m*omega/h_bar)*x
         herm = hermite.hermite(n, x)
-        soln = ((m*omega/np.pi)**(1/4))*(math.sqrt((2**n)*math.factorial(n)))**(-1)*herm*np.exp(-.5*x**2)
+        soln = ((m*omega/(np.pi*h_bar))**(1/4))*((math.sqrt((2**n)*math.factorial(n)))**(-1))*herm*np.exp(-.5*x**2)
+
         return soln
