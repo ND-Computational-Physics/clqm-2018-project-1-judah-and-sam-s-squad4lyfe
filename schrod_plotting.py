@@ -32,7 +32,7 @@ def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var
     Outputs:
         (plot): A plot of the normalized eigenvectors you're interested in plotting
     """
-    test_case = stm.Schrod_Matrix(endpoints,num_points-1, potential, m)
+    test_case = stm.Schrod_Matrix(endpoints,num_points-1,num_points-1, potential, m)
     x_val = test_case.x_set()
     matrix = test_case.gen_matrix_discrete(x_val)
 
@@ -87,8 +87,8 @@ def schrod_plot_ho(endpoints, num_points, dimension, potential, range_var1, rang
     
     return eigenva
 
-#x = schrod_plot_discrete([-200,200],150,stm.V, 0,2, 511)
-#print(x)
+x = schrod_plot_discrete([-1,1],1000,stm.V,0,1,511)
+print(x)
 
-x = schrod_plot_ho([-1,1],1000,10,stm.V,0,4,511)
+x = schrod_plot_ho([-1,1],1000,5,stm.V,0,1,511)
 print(x)
