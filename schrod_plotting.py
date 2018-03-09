@@ -8,7 +8,7 @@
     University of Notre Dame
 
     Written for Computational Lab in Quantum Mechanics, Spring 2018
-    Last updated on 2/15/2018
+    Last updated on 3/8/2018
 """
 import schrodinger_to_matrix as stm
 import numpy as np
@@ -19,14 +19,19 @@ import hermite
 
 def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var2, m): 
     """
-    Plotting and normalizing our solutions to the Schrodinger Equation.
+    Plotting and normalizing our solutions to the Schrodinger Equation in the discrete basis.
     
     Inputs:
         endpoints (list): The endpoints at which we want to evaluate between
+        
         num_points (int): The number of points (i.e. solutions) we want to have
+        
         potental (func): The potential we want to consider when evaluating
+        
         range_var1 (int): The lower bound of the eigenvector solutions we want to plot
+        
         range_var2 (int): The upper bound of the eigenvector solutions we want to plot
+        
         m (float): The mass of our particle
     
     Outputs:
@@ -44,17 +49,35 @@ def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var
     
     for i in range(range_var1,range_var2):
         eigenve_plot = np.array(eigenve[i])*np.sqrt(1/h)
-        plt.plot(x_val,eigenve_plot)
+        #plt.plot(x_val,eigenve_plot)
     
     plt.xlabel("(pm)")
     plt.ylabel("(keV)")
     
-    plt.show()
+    #plt.show()
     
-    return eigenva
+    return eigenva, x_val, eigenve_plot
 
 def schrod_plot_ho(endpoints, num_points, dimension, potential, range_var1, range_var2, m):
+    """
+    Plotting and normalizing our solutions to the Schrodinger Equation in the harmonic oscillator basis.
     
+    Inputs:
+        endpoints (list): The endpoints at which we want to evaluate between
+        
+        num_points (int): The number of points (i.e. solutions) we want to have
+        
+        potental (func): The potential we want to consider when evaluating
+        
+        range_var1 (int): The lower bound of the eigenvector solutions we want to plot
+        
+        range_var2 (int): The upper bound of the eigenvector solutions we want to plot
+        
+        m (float): The mass of our particle
+    
+    Outputs:
+        (plot): A plot of the normalized eigenvectors you're interested in plotting
+    """
     omega = 1 
     
     test_case = stm.Schrod_Matrix(endpoints, num_points-1, dimension, potential, m)
@@ -80,15 +103,81 @@ def schrod_plot_ho(endpoints, num_points, dimension, potential, range_var1, rang
     
     for i in range(range_var1, range_var2):
         plt.plot(x_val, solns[i])
-
+    
     plt.xlabel("(pm)")
     plt.ylabel("(keV)")
     plt.show()
     
-    return eigenva
+    return eigenva, x_val, solns
 
-x = schrod_plot_discrete([-1,1],1000,stm.V,0,1,511)
-print(x)
+#x = schrod_plot_discrete([-1,1],1000,stm.V,0,6,511)
+#y = schrod_plot_ho([-1,1],1000,30,stm.V,0,6,511)
 
-x = schrod_plot_ho([-1,1],1000,5,stm.V,0,1,511)
-print(x)
+
+# Discrete Energy vs. Quantum Number Plot while Changing Number of Solutions #
+
+
+for i in range(10,1000,100):
+    x = schrod_plot_discrete([-1,1],i,stm.V,0,1,511)
+
+    plt.plot(range(0,i-2),x[0])
+    plt.xlabel("n")
+    plt.ylabel("(keV)")
+
+plt.show()
+
+
+# Discrete Energy vs. Quantum Number Plot while Changing Range #
+
+for i in range(1,10):
+    x = schrod_plot_discrete([-i,i],1000,stm.V,0,1,511)
+
+    plt.plot(range(0,998),x[0])
+    plt.xlabel("n")
+    plt.ylabel("(keV)")
+
+plt.show()
+
+
+# Discrete Ground State Energies vs. Diff. Dimensions #
+
+grnd_energy = []
+for step in range(10, 200, 10):
+    x = schrod_plot_discrete([-1,1],step,stm.V,0,1,511)
+    eigenva = x[0]
+    grnd_energy.append(eigenva[0])
+x = list(range(10,200,10))
+y = grnd_energy
+
+plt.plot(x,y)
+plt.xlabel("Number of Eigenfunctions")
+plt.ylabel("(keV)")
+plt.show()
+
+# Harmonic Oscillator Ground State Energies vs. Diff. Number of Steps #
+
+grnd_energy = []
+for step in range(10, 200, 10):
+    x = schrod_plot_ho([-1,1],step,30,stm.V,0,1,511)
+    eigenva = x[0]
+    grnd_energy.append(eigenva[0])
+x = list(range(10,200,10))
+y = grnd_energy
+
+plt.plot(x,y)
+plt.xlabel("Number of Steps")
+plt.ylabel("(keV)")
+plt.show()
+
+
+# Harmonic Oscillator Energy vs. Quantum Number Plot #
+
+x = schrod_plot_ho([-1,1],1000,30,stm.V,0,1,511)
+
+plt.plot(range(0,30),x[0])
+plt.xlabel("n")
+plt.ylabel("(keV)")
+plt.show()
+
+
+

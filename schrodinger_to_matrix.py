@@ -8,7 +8,7 @@
     University of Notre Dame
 
     Written for Computational Lab in Quantum Mechanics, Spring 2018
-    Last updated on 2/15/2018
+    Last updated on 3/6/2018
 """
 import numpy as np
 import hermite
@@ -22,7 +22,7 @@ def V(x):
     Arguments:
         x (float): Discrete values between the two endpoints of evaluation.
     """
-    V_func = .5*(511)*(1)**2*x**2 # This is the potential function! Change it here!
+    V_func = .5*511*x**2 # This is the potential function! Change it here!
 
     return V_func
 
@@ -34,7 +34,9 @@ class Schrod_Matrix:
             endpoints (list): The two endpoints of our range over which we're solving the Schrodinger Equation.
 
             num_steps (int): The number of steps we're solving the Schrodinger Equation at, essentially the size of our hamiltonian matrix.
-
+            
+            dimension (int): The dimensions of our hamiltonian matrix we'll construct
+            
             potential (function): Our potential, resulting from V(x).
 
             m (float): The mass of our particle
@@ -49,12 +51,15 @@ class Schrod_Matrix:
         """
         Generating the elements of our hamiltonian matrix for a discrete basis.
 
-        Arguments:
+        Inputs:
             i (index): Row index
 
             j (index): Column index
 
             x_points (list): A set of the x points we're evaluating over
+        
+        Outputs:
+            element (float): The element of our hamiltonian matrix
         """
         hbar = 1
 
@@ -73,14 +78,19 @@ class Schrod_Matrix:
 
     def matrix_element_generate_ho(self, i, j, x_points, w):
         """
-    Generating the elements of our hamiltonian matrix for a discrete basis.
+        Generating the elements of our hamiltonian matrix for a discrete basis.
 
-    Arguments:
-        i (index): Row index
+        Inputs:
+            i (index): Row index
 
-        j (index): Column index
+            j (index): Column index
 
-        x_points (list): A set of the x points we're evaluating over
+            x_points (list): A set of the x points we're evaluating over
+        
+            w (float): Our value for omega
+            
+        Outputs:
+            element (float): The element of our hamiltonian matrix
         """
         h_bar = 1
 
@@ -114,7 +124,7 @@ class Schrod_Matrix:
 
     def gen_matrix_discrete(self, x):
         """
-        Creating our Hamiltonian matrix
+        Creating our Hamiltonian matrix for the discrete basis
 
         Inputs:
             x (list): A list of our x values we'll evaluate over
@@ -133,7 +143,7 @@ class Schrod_Matrix:
     
     def gen_matrix_ho(self, x, omega):
         """
-        Creating our Hamiltonian matrix
+        Creating our Hamiltonian matrix for the harmonic oscillator basis
 
         Inputs:
             x (list): A list of our x values we'll evaluate over
@@ -151,6 +161,23 @@ class Schrod_Matrix:
         return hamilt
     
     def ho_integral(self, x_set, i, j, potential, m):
+        """
+        Evaluating the potential integral in the harmonic oscillator basis.
+        
+        Inputs:
+            x_set (list): A list of x values we'll evaluate over
+            
+            i (int): The row index
+            
+            j (int): The column index
+            
+            potential (func): Our potential function
+            
+            m (float): The mass of our particle
+        
+        Outputs:
+            returnee (float): The value of our potential integral
+        """
         omega = 1
         V = []
         wavefunc_conj = []
@@ -173,9 +200,13 @@ class Schrod_Matrix:
     
         Inputs:
             x (float): x value we're evaluating at
+            
             n (int): The integer quantum number n
+            
             omega (float): Constant of proprtionality
+            
             m (float): The mass of our particle
+        
         Outputs:
             soln (float): Our solution to part of the HO basis
         """
