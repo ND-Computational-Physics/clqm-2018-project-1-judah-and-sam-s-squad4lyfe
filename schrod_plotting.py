@@ -17,10 +17,10 @@ import matplotlib.pyplot as plt
 import scipy
 import hermite
 
-def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var2, m): 
+def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var2, m):
     """
     Plotting and normalizing our solutions to the Schrodinger Equation.
-    
+
     Inputs:
         endpoints (list): The endpoints at which we want to evaluate between
         num_points (int): The number of points (i.e. solutions) we want to have
@@ -28,7 +28,7 @@ def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var
         range_var1 (int): The lower bound of the eigenvector solutions we want to plot
         range_var2 (int): The upper bound of the eigenvector solutions we want to plot
         m (float): The mass of our particle
-    
+
     Outputs:
         (plot): A plot of the normalized eigenvectors you're interested in plotting
     """
@@ -39,56 +39,53 @@ def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var
     eigenva,eigenve = sms.eigensolver(matrix)
 
     eigenve = np.transpose(eigenve) # Transposing the eigenvectors so we can plot them against our x_val
-    
+
     h = (test_case.endpoints[1] - test_case.endpoints[0])/test_case.num_steps
-    
-    for i in range(range_var1,range_var2):
-        eigenve_plot = np.array(eigenve[i])*np.sqrt(1/h)
-        plt.plot(x_val,eigenve_plot)
-    
-    plt.xlabel("(pm)")
-    plt.ylabel("(keV)")
-    
-    plt.show()
-    
+
+    #for i in range(range_var1,range_var2):
+        #eigenve_plot = np.array(eigenve[i])*np.sqrt(1/h)
+        #plt.plot(x_val,eigenve_plot)
+
+    #plt.xlabel("(pm)")
+    #plt.ylabel("(keV)")
+
     return eigenva
 
 def schrod_plot_ho(endpoints, num_points, dimension, potential, range_var1, range_var2, m):
-    
-    omega = 1 
-    
+
+    omega = 1
+
     test_case = stm.Schrod_Matrix(endpoints, num_points-1, dimension, potential, m)
     x_val = test_case.x_set()
     matrix = test_case.gen_matrix_ho(x_val,omega)
-    
+
     eigenva,eigenve = sms.eigensolver(matrix)
 
     eigenve = np.transpose(eigenve)
-    
+
     ho_total = []
-    
     for i in range(0, dimension):
-        ho = []
+        ho_row = []
         for x in x_val:
-            ho.append(test_case.ho_soln(x, i, omega, m))
-        
-        ho_total.append(ho)
+            ho_row.append(test_case.ho_soln(x, i, omega, m))
+        ho_total.append(ho_row)
 
     solns = np.matmul(np.transpose(np.array(ho_total)),np.array(eigenve))
-    
-    solns = np.transpose(solns)
-    
-    for i in range(range_var1, range_var2):
-        plt.plot(x_val, solns[i])
 
-    plt.xlabel("(pm)")
-    plt.ylabel("(keV)")
-    plt.show()
-    
+    solns = np.transpose(solns)
+
+    #for i in range(range_var1, range_var2):
+        #plt.plot(x_val, solns[i])
+
+
+
     return eigenva
 
-x = schrod_plot_discrete([-1,1],1000,stm.V,0,1,511)
-print(x)
 
-x = schrod_plot_ho([-1,1],1000,5,stm.V,0,1,511)
+#x = schrod_plot_discrete([-1,1],1000,stm.V,0,1,511)
+#print(x)
+
+
+x = schrod_plot_ho([-1,1],1000,10,stm.V,0,1,511)
 print(x)
+plt.show()
