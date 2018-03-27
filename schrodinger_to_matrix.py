@@ -22,7 +22,7 @@ def V(x):
     Arguments:
         x (float): Discrete values between the two endpoints of evaluation.
     """
-    V_func = .5*511*x**2 # This is the potential function! Change it here!
+    V_func = 0 # This is the potential function! Change it here!
 
     return V_func
 
@@ -95,7 +95,7 @@ class Schrod_Matrix:
         h_bar = 1
 
         prefactor = (-1*h_bar*w)/4
-        
+
         if i+2 == j:
             element = prefactor*math.sqrt(i+1)*math.sqrt(i+2) + self.ho_integral(x_points, i, j, self.potential, self.m)
         elif i == j:
@@ -104,7 +104,7 @@ class Schrod_Matrix:
             element = prefactor*math.sqrt(i)*math.sqrt(i-1) + self.ho_integral(x_points, i, j, self.potential, self.m)
         else:
             element = 0
-        
+
         return element
 
     def x_set(self):
@@ -140,7 +140,7 @@ class Schrod_Matrix:
                 hamilt[i][j] = ele
 
         return hamilt
-    
+
     def gen_matrix_ho(self, x, omega):
         """
         Creating our Hamiltonian matrix for the harmonic oscillator basis
@@ -159,7 +159,7 @@ class Schrod_Matrix:
                 hamilt[i][j] = ele
 
         return hamilt
-    
+
     def ho_integral(self, x_set, i, j, potential, m):
         """
         Evaluating the potential integral in the harmonic oscillator basis.
@@ -182,22 +182,22 @@ class Schrod_Matrix:
         V = []
         wavefunc_conj = []
         wavefunc = []
-        
+
         for x in x_set:
             V.append(potential(x))
             wavefunc_conj.append(self.ho_soln(x, i, omega, m))
             wavefunc.append(self.ho_soln(x, j, omega, m))
-    
+
         solution = np.array(wavefunc_conj)*np.array(V)*np.array(wavefunc)
-        
+
         returnee = scipy.integrate.simps(solution, x_set)
-        
+
         return returnee
-            
+
     def ho_soln(self, x, n, omega, m):
         """
         The solutions to the harmonic oscillator basis, which we'll mulitply by our eigenvectors to the Hamiltonian.
-    
+
         Inputs:
             x (float): x value we're evaluating at
             
@@ -211,6 +211,7 @@ class Schrod_Matrix:
             soln (float): Our solution to part of the HO basis
         """
         h_bar = 1
+
         x = np.sqrt(m*omega/h_bar)*x
         herm = hermite.hermite(n, x)
         soln = ((m*omega/(np.pi*h_bar))**(1/4))*((math.sqrt((2**n)*math.factorial(n)))**(-1))*herm*np.exp(-.5*x**2)
