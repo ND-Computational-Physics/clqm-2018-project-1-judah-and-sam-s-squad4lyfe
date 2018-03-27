@@ -52,22 +52,13 @@ def harmonic_energy_vs_n(endpoints, numpoints, dimension,potential, range_var1, 
     plt.ylabel("Energy of the nth Excited State")
     plt.title("Energies of the Harmonic Oscillator vs. n")
 
-def discrete_ground_energy_vs_vectors(number_of_points, V = stm.V):
+
+def discrete_energy_ground(max_eig, V = stm.V):
     """
     This function is for making a plot of the value of the ground state energy
     vs. the number of basis vecotr used to calculate E. So as we move along the
     x-axis, we expect that the function will converge to the proper value of E_0.
     """
-    x=[]
-    y=[]
-    for i in range(5, number_of_points, 5):
-        x.append(i)
-        y.append(schrod_plotting.schrod_plot_discrete([-1,1],i,V,0,1,511)[0])
-    plt.xlabel("Number of Plotting Points")
-    plt.ylabel("Ground State Energy")
-    plt.plot(x,y)
-
-def discrete_energy_ground(max_eig, V = stm.V):
     x_values = []
     y_values = []
     for i in range(3,max_eig):
@@ -80,6 +71,11 @@ def discrete_energy_ground(max_eig, V = stm.V):
     print(y_values)
 
 def harmonic_energy_ground(max_eig, V = stm.V):
+    """
+    This function is for making a plot of the value of the ground state energy
+    vs. the number of basis vecotr used to calculate E. So as we move along the
+    x-axis, we expect that the function will converge to the proper value of E_0.
+    """
     x_values = []
     y_values = []
     for i in range(3,max_eig):
