@@ -8,7 +8,7 @@
     University of Notre Dame
 
     Written for Computational Lab in Quantum Mechanics, Spring 2018
-    Last updated on 2/15/2018
+    Last updated on 3/27/2018
 """
 import schrodinger_to_matrix as stm
 import numpy as np
@@ -19,14 +19,19 @@ import hermite
 
 def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var2, m): 
     """
-    Plotting and normalizing our solutions to the Schrodinger Equation.
+    Plotting and normalizing our solutions to the Schrodinger Equation in the discrete basis.
     
     Inputs:
         endpoints (list): The endpoints at which we want to evaluate between
+        
         num_points (int): The number of points (i.e. solutions) we want to have
+        
         potental (func): The potential we want to consider when evaluating
+        
         range_var1 (int): The lower bound of the eigenvector solutions we want to plot
+        
         range_var2 (int): The upper bound of the eigenvector solutions we want to plot
+        
         m (float): The mass of our particle
     
     Outputs:
@@ -44,17 +49,35 @@ def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var
     
     for i in range(range_var1,range_var2):
         eigenve_plot = np.array(eigenve[i])*np.sqrt(1/h)
-        plt.plot(x_val,eigenve_plot)
+        #plt.plot(x_val,eigenve_plot)
     
     plt.xlabel("(pm)")
     plt.ylabel("(keV)")
     
-    plt.show()
+    #plt.show()
     
-    return eigenva
+    return eigenva, x_val, eigenve_plot
 
 def schrod_plot_ho(endpoints, num_points, dimension, potential, range_var1, range_var2, m):
+    """
+    Plotting and normalizing our solutions to the Schrodinger Equation in the harmonic oscillator basis.
     
+    Inputs:
+        endpoints (list): The endpoints at which we want to evaluate between
+        
+        num_points (int): The number of points (i.e. solutions) we want to have
+        
+        potental (func): The potential we want to consider when evaluating
+        
+        range_var1 (int): The lower bound of the eigenvector solutions we want to plot
+        
+        range_var2 (int): The upper bound of the eigenvector solutions we want to plot
+        
+        m (float): The mass of our particle
+    
+    Outputs:
+        (plot): A plot of the normalized eigenvectors you're interested in plotting
+    """
     omega = 1 
     
     test_case = stm.Schrod_Matrix(endpoints, num_points-1, dimension, potential, m)
@@ -78,17 +101,11 @@ def schrod_plot_ho(endpoints, num_points, dimension, potential, range_var1, rang
     
     solns = np.transpose(solns)
     
-    for i in range(range_var1, range_var2):
-        plt.plot(x_val, solns[i])
-
-    plt.xlabel("(pm)")
-    plt.ylabel("(keV)")
-    plt.show()
+    #for i in range(range_var1, range_var2):
+        #plt.plot(x_val, solns[i])
     
-    return eigenva
-
-x = schrod_plot_discrete([-1,1],1000,stm.V,0,1,511)
-print(x)
-
-x = schrod_plot_ho([-1,1],1000,5,stm.V,0,1,511)
-print(x)
+    #plt.xlabel("(pm)")
+    #plt.ylabel("(keV)")
+    #plt.show()
+    
+    return eigenva, x_val, solns
