@@ -8,8 +8,10 @@
     University of Notre Dame
 
     Written for Computational Lab in Quantum Mechanics, Spring 2018
-    Last updated on 3/6/2018
+    Last updated on 3/28/2018
 """
+import numpy as np
+
 class Discrete_Observables:
     def __init__(self, endpoints, num_steps, dimension, potential, m):
         """
@@ -30,7 +32,7 @@ class Discrete_Observables:
         self.potential = potential
         self.m = m
         
-    def gen_matrix_discrete(self, x):
+    def gen_matrix_discrete(self, x, operator='x'):
         """
         Creating our Hamiltonian matrix for the discrete basis
 
@@ -44,7 +46,12 @@ class Discrete_Observables:
 
         for i in range(self.num_steps-1):
             for j in range(self.num_steps-1):
-                ele = self.matrix_element_generate_discrete(i,j,x)
+                if operator=='x':
+                    ele = self.x_element_discrete(i,j,x)
+                if operator=='x**2':
+                    ele = self.x2_element_discrete(i,j,x)
+                if operator=='p**2':
+                    ele = self.p2_element_discrete(i,j,x)
                 hamilt[i][j] = ele
 
         return hamilt
@@ -82,7 +89,7 @@ class Discrete_Observables:
         else:
             element = 0
     
-    return element
+        return element
 
 # P Operator #
 
