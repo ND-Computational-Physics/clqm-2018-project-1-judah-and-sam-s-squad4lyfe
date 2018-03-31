@@ -8,23 +8,19 @@
     University of Notre Dame
 
     Written for Computational Lab in Quantum Mechanics, Spring 2018
-    Last updated on 3/29/2018
+    Last updated on 3/6/2018
 """
-import numpy as np
-import math
-import hermite
-import scipy.integrate
 
 class HO_Observables:
-    def __init__(self, endpoints, num_steps, dimension, potential, m, omega):
+    def __init__(self, endpoints, num_steps, dimension, potential, m):
         """
         Arguments:
             endpoints (list): The two endpoints of our range over which we're solving the Schrodinger Equation.
 
             num_steps (int): The number of steps we're solving the Schrodinger Equation at, essentially the size of our hamiltonian matrix.
-            
+
             dimension (int): The dimensions of our hamiltonian matrix we'll construct
-            
+
             potential (function): Our potential, resulting from V(x).
 
             m (float): The mass of our particle
@@ -34,49 +30,53 @@ class HO_Observables:
         self.dimension = dimension
         self.potential = potential
         self.m = m
-        self.omega = omega
 
-    def gen_matrix_ho(self, x, operator='x'):
+    def matrix_element_generate_ho(self, i, j, x_points, w):
         """
-        Creating our Hamiltonian matrix for the discrete basis
+        Generating the elements of our hamiltonian matrix for a discrete basis.
 
         Inputs:
-            x (list): A list of our x values we'll evaluate over
+            i (index): Row index
+
+            j (index): Column index
+
+            x_points (list): A set of the x points we're evaluating over
+
+            w (float): Our value for omega
 
         Outputs:
-            hamilt (array): Our hamiltonian matrix
+            element (float): The element of our hamiltonian matrix
         """
-        hamilt = np.zeros([self.dimension-1,self.dimension-1])
+        h_bar = 1
 
-        for i in range(self.dimension-1):
-            for j in range(self.dimension-1):
-                if operator=='x':
-                    ele = self.x_element_ho(i,j,x)
-                if operator=='x**2':
-                    ele = self.x2_element_ho(i,j,x)
-                if operator=='p':
-                    ele = self.p_element_ho(i,j,x)
-                if operator=='p**2':
-                    ele = self.p2_element_ho(i,j,x)
-                hamilt[i][j] = ele
+        prefactor = (-1*h_bar*w)/4
 
-        return np.array(hamilt)
-    
+        if i+2 == j:
+            element = prefactor*math.sqrt(i+1)*math.sqrt(i+2) + self.ho_integral(x_points, i, j, self.potential, self.m)
+        elif i == j:
+            element = (-1)*prefactor*((i+1)+(i)) + self.ho_integral(x_points, i, j, self.potential, self.m)
+        elif i-2 == j:
+            element = prefactor*math.sqrt(i)*math.sqrt(i-1) + self.ho_integral(x_points, i, j, self.potential, self.m)
+        else:
+            element = 0
+
+        return element
+
     def ho_integral(self, x_set, i, j, potential, m):
         """
         Evaluating the potential integral in the harmonic oscillator basis.
-        
+
         Inputs:
             x_set (list): A list of x values we'll evaluate over
-            
+
             i (int): The row index
-            
+
             j (int): The column index
-            
+
             potential (func): Our potential function
-            
+
             m (float): The mass of our particle
-        
+
         Outputs:
             returnee (float): The value of our potential integral
         """
@@ -102,13 +102,13 @@ class HO_Observables:
 
         Inputs:
             x (float): x value we're evaluating at
-            
+
             n (int): The integer quantum number n
-            
+
             omega (float): Constant of proprtionality
-            
+
             m (float): The mass of our particle
-        
+
         Outputs:
             soln (float): Our solution to part of the HO basis
         """
@@ -135,59 +135,67 @@ class HO_Observables:
 
         return x
 
-######################################################################
-## The Operators ##
-######################################################################
-
 # X Operator #
-    
-    def V_x(self,x):
+
+    def V_x(x):
         return x
-    
+
     def x_element_ho(self,i,j,x_points):
         if i+2 == j:
-            element = self.ho_integral(x_points, i, j, self.V_x, self.m)
+            element = self.ho_integral(x_points, i, j, V_x, self.m)
         elif i == j:
-            element = self.ho_integral(x_points, i, j, self.V_x, self.m)
+            element = self.ho_integral(x_points, i, j, V_x, self.m)
         elif i-2 == j:
-            element = self.ho_integral(x_points, i, j, self.V_x, self.m)
+            element = self.ho_integral(x_points, i, j, V_x, self.m)
         else:
             element = 0
 
         return element
-    
+
 # X**2 Operator #
-    
-    def V_x2(self,x):
+
+    def V_x2(x):
         return x**2
-    
-    def x2_element_ho(self,i,j,x_points):
+
+    def x_element_ho(self,i,j,x_points):
         if i+2 == j:
-            element = self.ho_integral(x_points, i, j, self.V_x2, self.m)
+            element = self.ho_integral(x_points, i, j, V_x2, self.m)
         elif i == j:
-            element = self.ho_integral(x_points, i, j, self.V_x2, self.m)
+            element = self.ho_integral(x_points, i, j, V_x2, self.m)
         elif i-2 == j:
-            element = self.ho_integral(x_points, i, j, self.V_x2, self.m)
+            element = self.ho_integral(x_points, i, j, V_x2, self.m)
         else:
             element = 0
 
+        return element
+
+# P Operator #
+
+    def p(x):
+        return ?
+
+    def p_element_ho(self,i,j):
+        prefactor = math.sqrt(hbar*m*w/2)
+
+        if i == j+1:
+            element = prefator*math.sqrt(j+1)
+        elif i == j-1:
+            element = -1*prefactor*math.sqrt(j)
+        else:
+            element = 0
         return element
 
 # P**2 Operator #
 
-    def p2_element_ho(self,i,j,x_points):
-        h_bar = 1
-        w = self.omega
-        
-        prefactor = (-1*h_bar*w)/4
+    def p2_element_ho(self,i,j):
+        prefactor = -1*(hbar*m*w/2)
 
-        if i+2 == j:
-            element = 2*self.m*prefactor*math.sqrt(i+1)*math.sqrt(i+2)
-        elif i == j:
-            element = 2*self.m*(-1)*prefactor*((i+1)+(i))
-        elif i-2 == j:
-            element = 2*self.m*prefactor*math.sqrt(i)*math.sqrt(i-1)
+        if i == j=2:
+            element = prefactor*math.sqrt((j+1)(j+2))
+        elif i ==j:
+            element = prefactor*(-1)*(math.sqrt((j+1)(j+1))+math.sqrt(j*j))
+        elif i == j-2:
+            element = prefactor*math.sqrt(j*(j-1))
         else:
             element = 0
-
         return element
