@@ -205,7 +205,7 @@ class HO_Observables:
         prefactor = math.sqrt(hbar*m*w/2)
 
         if i == j+1:
-            element = prefator*math.sqrt(j+1)
+            element = prefactor*math.sqrt(j+1)
         elif i == j-1:
             element = -1*prefactor*math.sqrt(j)
         else:

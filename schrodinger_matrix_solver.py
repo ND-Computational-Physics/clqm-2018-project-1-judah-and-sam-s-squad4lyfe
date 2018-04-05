@@ -40,6 +40,7 @@ def eigensolver(matrix):
     return eigenvalues, eigenvectors
 
 if __name__ == "__main__":
-    print(eigensolver(random_matrix(3))[0])
+    my_matrix = [[1,2,3], [4,5,6], [7,8,9]]
+    print(eigensolver(my_matrix)[0])
     print('')
-    print(eigensolver(random_matrix(3))[1])
+    print(eigensolver(my_matrix)[1])
