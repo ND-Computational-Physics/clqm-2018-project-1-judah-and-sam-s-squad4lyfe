@@ -13,15 +13,15 @@
 import numpy as np
 
 class Discrete_Observables:
-    def __init__(self, endpoints, num_steps, dimension, potential, m):
+    def __init__(self, endpoints, num_steps, dimension, potential, m, hbar):
         """
         Arguments:
             endpoints (list): The two endpoints of our range over which we're solving the Schrodinger Equation.
 
             num_steps (int): The number of steps we're solving the Schrodinger Equation at, essentially the size of our hamiltonian matrix.
-            
+
             dimension (int): The dimensions of our hamiltonian matrix we'll construct
-            
+
             potential (function): Our potential, resulting from V(x).
 
             m (float): The mass of our particle
@@ -31,7 +31,8 @@ class Discrete_Observables:
         self.dimension = dimension
         self.potential = potential
         self.m = m
-        
+        self.hbar = hbar
+
     def gen_matrix_discrete(self, x, operator='x'):
         """
         Creating our Hamiltonian matrix for the discrete basis
@@ -50,12 +51,14 @@ class Discrete_Observables:
                     ele = self.x_element_discrete(i,j,x)
                 if operator=='x**2':
                     ele = self.x2_element_discrete(i,j,x)
+                if operator=='p':
+                    ele = self.p_element_discrete(i,j,x)
                 if operator=='p**2':
                     ele = self.p2_element_discrete(i,j,x)
                 hamilt[i][j] = ele
 
         return hamilt
-    
+
     def x_set(self):
         """
         Defining our set of x values which we want to evaluate over.
@@ -70,38 +73,51 @@ class Discrete_Observables:
             x.append(self.endpoints[0] + i*step)
 
         return x
-    
+
 # X Operator #
-    
+
     def x_element_discrete(self,i,j,x_points):
+
         if i == j:
             element = x_points[i]
         else:
             element = 0
-        
+
         return element
 
 # X**2 Operator #
 
     def x2_element_discrete(self,i,j,x_points):
+
         if i == j:
             element = (x_points[i])**2
         else:
             element = 0
-    
+
         return element
 
 # P Operator #
-
-# P**2 Operator #
-
-    def p2_element_discrete(self,i,j,x_points):
-        hbar = 1
+    def p_element_discrete(self, i,j,x_points):
 
         h = (self.endpoints[1] - self.endpoints[0])/self.num_steps
 
         if i == j:
-            element = (hbar**2)*(2/h**2)
+            element = (1j)*self.hbar/h
+        elif i >= j+2:
+            element = 0
+        elif j >= i+2:
+            element = 0
+        else:
+            element = (-1)*(1j)*self.hbar/h
+
+# P**2 Operator #
+
+    def p2_element_discrete(self,i,j,x_points):
+
+        h = (self.endpoints[1] - self.endpoints[0])/self.num_steps
+
+        if i == j:
+            element = (self.hbar**2)*(2/h**2)
         elif i >= j+2:
             element = 0
         elif j >= i+2:
