@@ -22,7 +22,7 @@ def V(x):
     Arguments:
         x (float): Discrete values between the two endpoints of evaluation.
     """
-    V_func = 0 # This is the potential function! Change it here!
+    V_func = .5*511*x**2 # This is the potential function! Change it here!
 
     return V_func
 

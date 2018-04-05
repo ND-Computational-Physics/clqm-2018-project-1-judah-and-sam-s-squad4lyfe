@@ -18,33 +18,24 @@ import schrodinger_to_matrix as stm
 import numpy as np
 import matplotlib.pyplot as plt
 
-def discrete_ob_plot(endpoints,num_steps,dimension,potential,m,range_var1,range_var2,operator='x'):
+def discrete_ob_plot(endpoints,num_steps,dimension,potential,m,state1,state2,operator='x'):
     dis_test = discrete.Discrete_Observables(endpoints,num_steps,dimension,potential,m)
     x_val = dis_test.x_set()
 
     op_matrix = dis_test.gen_matrix_discrete(x_val,operator)
     #print(op_matrix)
 
-    eigenva,eigenve = sms.eigensolver(op_matrix)
-
-    eigenve = np.transpose(eigenve) # Transposing the eigenvectors so we can plot them against our x_val
-
-    h = (dis_test.endpoints[1] - dis_test.endpoints[0])/dis_test.num_steps
+    dis_hamilt = sp.schrod_plot_discrete(endpoints, num_steps, potential, 0, 1, m)
     
-    for i in range(range_var1,range_var2):
-        eigenve_plot = np.array(eigenve[i])*np.sqrt(1/h)
-        plt.plot(x_val,eigenve_plot)
+    eigenstate1 = np.transpose(dis_hamilt[state1])
+    eigenstate2 = dis_hamilt[state2]
     
-    plt.xlabel("(pm)")
-    plt.ylabel("(keV)")
+    expectation = np.dot(eigenstate1,np.dot(op_matrix,eigenstate2))
     
-    plt.show()
-    
-    return eigenva, x_val, eigenve_plot
+    return expectation
 
-#discrete_ob_plot([-1,1],100,30,stm.V,511,0,10,operator='x')
 
-def ho_ob_plot(endpoints,num_steps,dimension,potential,m,omega,hbar,range_var1,range_var2,operator='x'):
+def ho_ob_plot(endpoints,num_steps,dimension,potential,m,omega,hbar,state1,state2,operator='x'):
     
     ho_test = ho.HO_Observables(endpoints,num_steps,dimension,potential,m,omega,hbar)
     x_val = ho_test.x_set()
@@ -52,29 +43,14 @@ def ho_ob_plot(endpoints,num_steps,dimension,potential,m,omega,hbar,range_var1,r
     op_matrix = ho_test.gen_matrix_ho(x_val,operator)
     #print(op_matrix)
     
-    eigenva,eigenve = sms.eigensolver(op_matrix)
-
-    eigenve = np.transpose(eigenve)
-
-    ho_total = []
-    for i in range(0, dimension):
-        ho_row = []
-        for x in x_val:
-            ho_row.append(ho_test.ho_soln(x, i, omega, m))
-        ho_total.append(ho_row)
-
-    solns = np.matmul(np.transpose(np.array(ho_total)),np.array(eigenve))
-
-    solns = np.transpose(solns)
+    ho_hamilt = sp.schrod_plot_ho(endpoints, num_steps, dimension, potential, 0, 1, m)
     
-    for i in range(range_var1, range_var2):
-        plt.plot(x_val, solns[i])
+    eigenstate1 = np.transpose(ho_hamilt[state1])
+    eigenstate2 = ho_hamilt[state2]
     
-    plt.xlabel("(pm)")
-    plt.ylabel("(keV)")
-    plt.show()
+    expectation = np.dot(eigenstate1,np.dot(op_matrix,eigenstate2))
     
-    return eigenva
+    return expectation
 
-ans = ho_ob_plot([-1,1],1000,30,stm.V,511,1,1,0,3,operator='p**2')
-print(ans)
+    
+

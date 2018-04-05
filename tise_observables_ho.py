@@ -167,7 +167,7 @@ class HO_Observables:
 
 # X Operator #
 
-    def V_x(self, x):
+    def V_x(x):
         return x
 
     def x_element_ho(self,i,j,x_points):
@@ -184,7 +184,7 @@ class HO_Observables:
 
 # X**2 Operator #
 
-    def V_x2(self,x):
+    def V_x2(x):
         return x**2
 
     def x2_element_ho(self,i,j,x_points):
