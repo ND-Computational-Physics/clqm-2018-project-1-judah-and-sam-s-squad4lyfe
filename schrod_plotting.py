@@ -49,12 +49,12 @@ def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var
     
     for i in range(range_var1,range_var2):
         eigenve_plot = np.array(eigenve[i])*np.sqrt(1/h)
-        #plt.plot(x_val,eigenve_plot)
+        plt.plot(x_val,eigenve_plot)
     
     plt.xlabel("(pm)")
     plt.ylabel("(keV)")
     
-    #plt.show()
+    plt.show()
     
     return eigenva, x_val, eigenve_plot
 
