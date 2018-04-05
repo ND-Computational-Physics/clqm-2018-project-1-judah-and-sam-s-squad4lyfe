@@ -34,7 +34,7 @@ class HO_Observables:
         self.dimension = dimension
         self.potential = potential
         self.m = m
-        
+
     def gen_matrix_ho(self, x, operator='x'):
         """
         Creating our Hamiltonian matrix for the harmonic oscillator basis
@@ -167,7 +167,7 @@ class HO_Observables:
 
 # X Operator #
 
-    def V_x(x):
+    def V_x(self, x):
         return x
 
     def x_element_ho(self,i,j,x_points):
@@ -199,6 +199,8 @@ class HO_Observables:
 
         return element
 
+    
+
 # P Operator #
 
     def p_element_ho(self,i,j):
@@ -215,10 +217,10 @@ class HO_Observables:
 # P**2 Operator #
 
     def p2_element_ho(self,i,j):
-        
+
         hbar = 1
         w = 1
-        
+
         prefactor = -1*(hbar*self.m*w/2)
 
         if i == j+2:
@@ -230,3 +232,20 @@ class HO_Observables:
         else:
             element = 0
         return element
+
+ # P and P**2 matrix creator #
+    def p_matrix_generator(self, n, operator):
+        """
+        Arguments:
+            n(int): Dimension of momentum or momentum squared matrix
+            operator(function): Either p_element_ho or p2_element_ho, determines which
+                                matrix to construct
+        Returns:
+            operator_matrix(array): Either p or p**2 operator matrix
+
+        """
+        operator_matrix = []
+        for i in range (n-1):
+            for j in range (n-1):
+                operator_matrix[i,j] = operator(self,i,j)
+        return np.array(operator_matrix)

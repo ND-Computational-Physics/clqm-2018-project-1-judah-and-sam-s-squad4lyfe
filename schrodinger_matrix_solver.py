@@ -40,7 +40,7 @@ def eigensolver(matrix):
     return eigenvalues, eigenvectors
 
 if __name__ == "__main__":
-    my_matrix = [[1,2,3], [4,5,6], [7,8,9]]
+    my_matrix = [[1,0,2], [1,0,0], [0,5,0]]
     print(eigensolver(my_matrix)[0])
     print('')
     print(eigensolver(my_matrix)[1])
