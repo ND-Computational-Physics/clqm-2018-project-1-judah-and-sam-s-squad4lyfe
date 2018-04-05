@@ -44,11 +44,9 @@ def discrete_ob_plot(endpoints,num_steps,dimension,potential,m,range_var1,range_
 
 #discrete_ob_plot([-1,1],100,30,stm.V,511,0,10,operator='x')
 
-def ho_ob_plot(endpoints,num_steps,dimension,potential,m,range_var1,range_var2,operator='x'):
+def ho_ob_plot(endpoints,num_steps,dimension,potential,m,omega,hbar,range_var1,range_var2,operator='x'):
     
-    omega = 1
-    
-    ho_test = ho.HO_Observables(endpoints,num_steps,dimension,potential,m)
+    ho_test = ho.HO_Observables(endpoints,num_steps,dimension,potential,m,omega,hbar)
     x_val = ho_test.x_set()
 
     op_matrix = ho_test.gen_matrix_ho(x_val,operator)
@@ -76,6 +74,7 @@ def ho_ob_plot(endpoints,num_steps,dimension,potential,m,range_var1,range_var2,o
     plt.ylabel("(keV)")
     plt.show()
     
-    return eigenva, x_val, solns
+    return eigenva
 
-ho_ob_plot([-1,1],100,30,stm.V,511,0,3,operator='p**2')
+ans = ho_ob_plot([-1,1],1000,30,stm.V,511,1,1,0,3,operator='p**2')
+print(ans)

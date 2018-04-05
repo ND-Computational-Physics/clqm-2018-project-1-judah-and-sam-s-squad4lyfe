@@ -16,7 +16,7 @@ import math
 import scipy
 
 class HO_Observables:
-    def __init__(self, endpoints, num_steps, dimension, potential, m):
+    def __init__(self, endpoints, num_steps, dimension, potential, m, w, hbar):
         """
         Arguments:
             endpoints (list): The two endpoints of our range over which we're solving the Schrodinger Equation.
@@ -34,6 +34,8 @@ class HO_Observables:
         self.dimension = dimension
         self.potential = potential
         self.m = m
+        self.w = w
+        self.hbar = hbar
 
     def gen_matrix_ho(self, x, operator='x'):
         """
@@ -61,7 +63,7 @@ class HO_Observables:
 
         return hamilt
 
-    def matrix_element_generate_ho(self, i, j, x_points, w):
+    def matrix_element_generate_ho(self, i, j, x_points):
         """
         Generating the elements of our hamiltonian matrix for a discrete basis.
 
@@ -77,9 +79,8 @@ class HO_Observables:
         Outputs:
             element (float): The element of our hamiltonian matrix
         """
-        h_bar = 1
 
-        prefactor = (-1*h_bar*w)/4
+        prefactor = (-1*self.h_bar*self.w)/4
 
         if i+2 == j:
             element = prefactor*math.sqrt(i+1)*math.sqrt(i+2) + self.ho_integral(x_points, i, j, self.potential, self.m)
@@ -110,15 +111,14 @@ class HO_Observables:
         Outputs:
             returnee (float): The value of our potential integral
         """
-        omega = 1
         V = []
         wavefunc_conj = []
         wavefunc = []
 
         for x in x_set:
             V.append(potential(x))
-            wavefunc_conj.append(self.ho_soln(x, i, omega, m))
-            wavefunc.append(self.ho_soln(x, j, omega, m))
+            wavefunc_conj.append(self.ho_soln(x, i, self.w, m))
+            wavefunc.append(self.ho_soln(x, j, self.w, m))
 
         solution = np.array(wavefunc_conj)*np.array(V)*np.array(wavefunc)
 
@@ -172,11 +172,11 @@ class HO_Observables:
 
     def x_element_ho(self,i,j,x_points):
         if i+2 == j:
-            element = self.ho_integral(x_points, i, j, V_x, self.m)
+            element = self.ho_integral(x_points, i, j, HO_Observables.V_x, self.m)
         elif i == j:
-            element = self.ho_integral(x_points, i, j, V_x, self.m)
+            element = self.ho_integral(x_points, i, j, HO_Observables.V_x, self.m)
         elif i-2 == j:
-            element = self.ho_integral(x_points, i, j, V_x, self.m)
+            element = self.ho_integral(x_points, i, j, HO_Observables.V_x, self.m)
         else:
             element = 0
 
@@ -184,7 +184,7 @@ class HO_Observables:
 
 # X**2 Operator #
 
-    def V_x2(x):
+    def V_x2(self,x):
         return x**2
 
     def x2_element_ho(self,i,j,x_points):
@@ -204,7 +204,7 @@ class HO_Observables:
 # P Operator #
 
     def p_element_ho(self,i,j):
-        prefactor = math.sqrt(hbar*m*w/2)
+        prefactor = math.sqrt(self.hbar*self.m*self.w/2)
 
         if i == j+1:
             element = prefactor*math.sqrt(j+1)
@@ -218,10 +218,7 @@ class HO_Observables:
 
     def p2_element_ho(self,i,j):
 
-        hbar = 1
-        w = 1
-
-        prefactor = -1*(hbar*self.m*w/2)
+        prefactor = -1*(self.hbar*self.m*self.w/2)
 
         if i == j+2:
             element = prefactor*math.sqrt((j+1)*(j+2))
