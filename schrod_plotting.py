@@ -37,7 +37,7 @@ def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var
     Outputs:
         (plot): A plot of the normalized eigenvectors you're interested in plotting
     """
-    test_case = stm.Schrod_Matrix(endpoints,num_points-1,num_points-1, potential, m)
+    test_case = stm.Schrod_Matrix(endpoints,num_points-1,num_points-1, potential, m,1,1)
     x_val = test_case.x_set()
     matrix = test_case.gen_matrix_discrete(x_val)
 
@@ -58,7 +58,7 @@ def schrod_plot_discrete(endpoints, num_points, potential, range_var1, range_var
     
     return eigenve
 
-def schrod_plot_ho(endpoints, num_points, dimension, potential, range_var1, range_var2, m):
+def schrod_plot_ho(endpoints, num_points, dimension, potential, omega, hbar, range_var1, range_var2, m):
     """
     Plotting and normalizing our solutions to the Schrodinger Equation in the harmonic oscillator basis.
     
@@ -78,9 +78,8 @@ def schrod_plot_ho(endpoints, num_points, dimension, potential, range_var1, rang
     Outputs:
         (plot): A plot of the normalized eigenvectors you're interested in plotting
     """
-    omega = 1 
     
-    test_case = stm.Schrod_Matrix(endpoints, num_points-1, dimension, potential, m)
+    test_case = stm.Schrod_Matrix(endpoints, num_points-1, dimension, potential, m, omega, hbar)
     x_val = test_case.x_set()
     matrix = test_case.gen_matrix_ho(x_val,omega)
 

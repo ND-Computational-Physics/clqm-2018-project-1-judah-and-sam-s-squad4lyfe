@@ -43,10 +43,10 @@ class Discrete_Observables:
         Outputs:
             hamilt (array): Our hamiltonian matrix
         """
-        hamilt = np.zeros([self.num_steps-1,self.num_steps-1])
+        hamilt = np.zeros([self.num_steps-2,self.num_steps-2])
 
-        for i in range(self.num_steps-1):
-            for j in range(self.num_steps-1):
+        for i in range(self.num_steps-2):
+            for j in range(self.num_steps-2):
                 if operator=='x':
                     ele = self.x_element_discrete(i,j,x)
                 if operator=='x**2':

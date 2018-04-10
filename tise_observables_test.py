@@ -18,8 +18,8 @@ import schrodinger_to_matrix as stm
 import numpy as np
 import matplotlib.pyplot as plt
 
-def discrete_ob_plot(endpoints,num_steps,dimension,potential,m,state1,state2,operator='x'):
-    dis_test = discrete.Discrete_Observables(endpoints,num_steps,dimension,potential,m)
+def discrete_ob_plot(endpoints,num_steps,dimension,potential,m,hbar,state1,state2,operator='x'):
+    dis_test = discrete.Discrete_Observables(endpoints,num_steps,dimension,potential,m,hbar)
     x_val = dis_test.x_set()
 
     op_matrix = dis_test.gen_matrix_discrete(x_val,operator)
@@ -43,7 +43,7 @@ def ho_ob_plot(endpoints,num_steps,dimension,potential,m,omega,hbar,state1,state
     op_matrix = ho_test.gen_matrix_ho(x_val,operator)
     #print(op_matrix)
     
-    ho_hamilt = sp.schrod_plot_ho(endpoints, num_steps, dimension, potential, 0, 1, m)
+    ho_hamilt = sp.schrod_plot_ho(endpoints, num_steps, dimension, potential,omega,hbar, 0, 1, m)
     
     eigenstate1 = np.transpose(ho_hamilt[state1])
     eigenstate2 = ho_hamilt[state2]

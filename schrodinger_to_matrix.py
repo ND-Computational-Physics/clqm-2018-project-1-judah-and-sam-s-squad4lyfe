@@ -22,13 +22,13 @@ def V(x):
     Arguments:
         x (float): Discrete values between the two endpoints of evaluation.
     """
-    V_func = .5*511*x**2 # This is the potential function! Change it here!
+    V_func = 511*.5*x**2 # This is the potential function! Change it here!
 
     return V_func
 
 
 class Schrod_Matrix:
-    def __init__(self, endpoints, num_steps, dimension, potential, m):
+    def __init__(self, endpoints, num_steps, dimension, potential, m, w, hbar):
         """
         Arguments:
             endpoints (list): The two endpoints of our range over which we're solving the Schrodinger Equation.
@@ -46,6 +46,8 @@ class Schrod_Matrix:
         self.dimension = dimension
         self.potential = potential
         self.m = m
+        self.w = w
+        self.hbar = hbar
 
     def matrix_element_generate_discrete(self, i, j, x_points):
         """
@@ -66,7 +68,7 @@ class Schrod_Matrix:
         h = (self.endpoints[1] - self.endpoints[0])/self.num_steps
 
         if i == j:
-            element = ((hbar**2)/(2*self.m))*(2/h**2) + self.potential(x_points[i])
+            element = ((self.hbar**2)/(2*self.m))*(2/h**2) + self.potential(x_points[i])
         elif i >= j+2:
             element = 0
         elif j >= i+2:
@@ -92,9 +94,8 @@ class Schrod_Matrix:
         Outputs:
             element (float): The element of our hamiltonian matrix
         """
-        h_bar = 1
 
-        prefactor = (-1*h_bar*w)/4
+        prefactor = (-1*self.hbar*self.w)/4
 
         if i+2 == j:
             element = prefactor*math.sqrt(i+1)*math.sqrt(i+2) + self.ho_integral(x_points, i, j, self.potential, self.m)
@@ -178,15 +179,15 @@ class Schrod_Matrix:
         Outputs:
             returnee (float): The value of our potential integral
         """
-        omega = 1
+
         V = []
         wavefunc_conj = []
         wavefunc = []
 
         for x in x_set:
             V.append(potential(x))
-            wavefunc_conj.append(self.ho_soln(x, i, omega, m))
-            wavefunc.append(self.ho_soln(x, j, omega, m))
+            wavefunc_conj.append(self.ho_soln(x, i, self.w, m))
+            wavefunc.append(self.ho_soln(x, j, self.w, m))
 
         solution = np.array(wavefunc_conj)*np.array(V)*np.array(wavefunc)
 
@@ -210,10 +211,9 @@ class Schrod_Matrix:
         Outputs:
             soln (float): Our solution to part of the HO basis
         """
-        h_bar = 1
 
-        x = np.sqrt(m*omega/h_bar)*x
+        x = np.sqrt(m*omega/self.hbar)*x
         herm = hermite.hermite(n, x)
-        soln = ((m*omega/(np.pi*h_bar))**(1/4))*((math.sqrt((2**n)*math.factorial(n)))**(-1))*herm*np.exp(-.5*x**2)
+        soln = ((m*omega/(np.pi*self.hbar))**(1/4))*((math.sqrt((2**n)*math.factorial(n)))**(-1))*herm*np.exp(-.5*x**2)
 
         return soln
